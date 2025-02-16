@@ -1,3 +1,4 @@
+import 'package:firt_flutter_app/register.dart';
 import 'package:flutter/material.dart';
 
 class loginPage extends StatefulWidget {
@@ -56,9 +57,10 @@ class _loginPageState extends State<loginPage> {
                       ),
                     ),
                     SizedBox(
-                      height: 150,
+                      height: 30,
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('Sign In', style: TextStyle(
                           color: Colors.black,
@@ -67,12 +69,24 @@ class _loginPageState extends State<loginPage> {
                       ),
                         CircleAvatar(
                           radius: 30,
-                          // backgroundColor: Color(0xff4c50fb),
+                          backgroundColor: Colors.black,
                           child: IconButton(
                             color: Colors.white,
                             onPressed: (){},
                             icon: Icon(Icons.arrow_forward),
                           ),
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        TextButton(onPressed: (){Navigator.pushNamed(context, 'register')
+                        ;}, child: Text('Dont have account? Signup Here', style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          fontSize: 14,
+                          color: Colors.blue
+                        ),
+                        )
                         )
                       ],
                     )
