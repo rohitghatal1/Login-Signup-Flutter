@@ -59,6 +59,19 @@ class _userRegisterState extends State<userRegister> {
                     ),
                     TextField(
                       decoration: InputDecoration(
+                        hintText: "Enter your username",
+                        fillColor: Colors.grey.shade300,
+                        filled: true,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        )
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
                         hintText: "Enter your Email",
                         fillColor: Colors.grey.shade300,
                         filled: true,
