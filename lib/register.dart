@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class userRegister extends StatefulWidget {
   const userRegister({super.key});
@@ -8,6 +12,44 @@ class userRegister extends StatefulWidget {
 }
 
 class _userRegisterState extends State<userRegister> {
+  //using TextEditingController to capture/get inputs
+
+  final TextEditingController nameCotroller = TextEditingController();
+  final TextEditingController numberController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  Future<void> registerUser() async {
+    final String apiUrl = "http://192.168.18.31:5000/api/auth/userRegister";
+
+    try{
+      final response = await http.post(Uri.parse(apiUrl),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({
+        "name": nameCotroller.text,
+        "number": numberController.text,
+        "username": usernameController.text,
+        "email": emailController.text,
+        "password": passwordController.text,
+      }),
+      );
+      if(response.statusCode == 201){
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Registration Successful")),
+        );
+        Navigator.pushNamed(context, 'login');
+      } else{
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Registration failed")),
+        );
+      }
+    } catch (err){
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("An error occured: $err")),
+      );
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -32,6 +74,7 @@ class _userRegisterState extends State<userRegister> {
                 child: Column(
                   children: [
                     TextField(
+                      controller: nameCotroller,
                       decoration: InputDecoration(
                         hintText: "Enter your Name",
                         fillColor: Colors.grey.shade200,
@@ -45,6 +88,7 @@ class _userRegisterState extends State<userRegister> {
                       height: 10,
                     ),
                     TextField(
+                      controller: numberController,
                       decoration: InputDecoration(
                         hintText: "Enter your Number",
                         fillColor: Colors.grey.shade300,
@@ -58,6 +102,7 @@ class _userRegisterState extends State<userRegister> {
                       height: 10,
                     ),
                     TextField(
+                      controller: usernameController,
                       decoration: InputDecoration(
                         hintText: "Enter your username",
                         fillColor: Colors.grey.shade300,
@@ -71,6 +116,7 @@ class _userRegisterState extends State<userRegister> {
                       height: 10,
                     ),
                     TextField(
+                      controller: emailController,
                       decoration: InputDecoration(
                         hintText: "Enter your Email",
                         fillColor: Colors.grey.shade300,
@@ -84,6 +130,7 @@ class _userRegisterState extends State<userRegister> {
                       height: 10,
                     ),
                     TextField(
+                      controller: passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
                         hintText: "Enter your Password",
@@ -97,13 +144,13 @@ class _userRegisterState extends State<userRegister> {
                     SizedBox(
                       height: 10,
                     ),
-                    Row(
-                      children: [
-                        Text("Register", style: TextStyle(
-                          fontSize: 27, color: Colors.white, fontWeight: FontWeight.w700,
-                        ),
-                        ),
-                      ],
+                    ElevatedButton(onPressed: registerUser, child: Text(
+                      "Register",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
+                    )
                     ),
                     Row(
                       children: [
