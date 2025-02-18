@@ -1,4 +1,5 @@
-import 'package:firt_flutter_app/register.dart';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -10,6 +11,43 @@ class loginPage extends StatefulWidget {
 }
 
 class _loginPageState extends State<loginPage> {
+
+  final TextEditingController numberController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  Future<void> submitLoginForm () async{
+    final String apiString = "http://192.168.18.31:5000/api/auth/userLogin";
+
+    try{
+      final response = await http.post(Uri.parse(apiString),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({
+        "number": numberController.text,
+        "password": passwordController.text,
+      })
+      );
+
+      if(response.body.isEmpty){
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("No response from server")),
+        );
+        return;
+      }
+
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+      if(responseData.containsKey("status") && responseData["status"]== "Success"){
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(responseData["message"] ?? "Login Successful")),
+        );
+      }
+
+    } catch(err){
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("An error occurred: $err")),
+        );
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -34,6 +72,7 @@ class _loginPageState extends State<loginPage> {
                 child: Column(
                   children: [
                     TextField(
+                      controller: numberController,
                       decoration: InputDecoration(
                           hintText: 'Enter username',
                           filled: true,
@@ -47,6 +86,7 @@ class _loginPageState extends State<loginPage> {
                       height: 30,
                     ),
                     TextField(
+                      controller: passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
                           hintText: 'Enter Password',
@@ -60,25 +100,13 @@ class _loginPageState extends State<loginPage> {
                     SizedBox(
                       height: 30,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Sign In', style: TextStyle(
-                          color: Colors.black,
-                        fontSize: 27, fontWeight: FontWeight.w700
+                    ElevatedButton(onPressed: submitLoginForm, child: Text(
+                      "Login",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
                       ),
-                      ),
-                        CircleAvatar(
-                          radius: 30,
-                          backgroundColor: Colors.black,
-                          child: IconButton(
-                            color: Colors.white,
-                            onPressed: (){},
-                            icon: Icon(Icons.arrow_forward),
-                          ),
-                        )
-                      ],
-                    ),
+                    )),
                     Row(
                       children: [
                         TextButton(onPressed: (){Navigator.pushNamed(context, 'register')
