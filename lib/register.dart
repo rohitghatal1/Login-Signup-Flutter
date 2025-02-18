@@ -144,7 +144,10 @@ class _userRegisterState extends State<userRegister> {
                     SizedBox(
                       height: 10,
                     ),
-                    ElevatedButton(onPressed: registerUser, child: Text(
+                    ElevatedButton(onPressed: registerUser, style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.greenAccent.shade700,
+                      foregroundColor: Colors.white,
+                    ), child: Text(
                       "Register",
                       style: TextStyle(
                         fontSize: 20,
